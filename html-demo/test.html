@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<script>
+var testvalue;
+function changeV(value){
+	
+	testvalue = value;
+	
+}
+function btnClk(){
+	alert(testvalue);
+}
+</script>
+
+<form>
+  <p>First name: <input type="text" id="input" onchange="changeV(this.value)"/></p>
+  <button onclick="btnClk()">Copy Text</button>
+</form>
+
+</body>
+</html>
