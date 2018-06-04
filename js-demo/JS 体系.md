@@ -1,18 +1,143 @@
+# 变量
+
+## 定义变量
+
+　　在定义变量时，统一使用"**var 变量名**"表示，例如：var str;甚至可以省略var这个关键字
+
+## JavaScript变量的类型如何决定
+
+JavaScript中变量的数据类型是由JS引擎决定的
+
+```js
+var name = "aaa"; //name是string类型
+var age = 2; //age是number类型
+var flag = true; //flag是boolean类型
+var email; //email只是声明，没有赋值，因此代表的类型是"undefined"，也就是无法确定
+name = 10; //name自动变成了number类型
+```
+
+## typeof 查看数据类型
+
+typeof 运算符有一个参数，即要检查的变量或值。例如：
+
+```js
+var sTemp = "test string";
+alert (typeof sTemp);    //输出 "string"
+alert (typeof 86);    //输出 "number"
+```
+
+对变量或值调用typeof运算符将返回下列值之一：
+
+- **undefined - 如果变量是 Undefined 类型的**
+- **boolean - 如果变量是 Boolean 类型的**
+- **number - 如果变量是 Number 类型的**
+- **string - 如果变量是 String 类型的**
+- **object - 如果变量是一种引用类型或 Null 类型的**
+
 # 操作符
+
+## == & ===
+
+```
+当==两边的内容是字符串时，则比较字符串的内容是否相等。
+当==两边的内容是数字时，则比较数字的大小是否相等。
+当==两边的内容是对象或者是对象的函数属性时，则比较内存地址是否相等。
+==用于一般比较，===用于严格比较，==在比较的时候可以转换数据类型，===严格比较，只要类型不匹配就返回flase。
+```
+
+## (NOT) !
+
+在JavaScript 中，逻辑NOT运算符与C和Java中的逻辑 NOT 运算符相同，都由感叹号（!）表示。
+
+与逻辑 OR 和逻辑 AND 运算符不同的是，逻辑 NOT 运算符返回的一定是 Boolean 值。
+
+逻辑 NOT 运算符的行为如下：
+
+```
+如果运算数是对象，返回 false
+如果运算数是数字 0，返回 true
+如果运算数是 0 以外的任何数字，返回 false
+如果运算数是 null，返回 true
+如果运算数是 NaN，返回 true
+如果运算数是 undefined，发生错误
+```
+
+​	判断JavaScript变量的Boolean 值时，也可以使用逻辑NOT运算符。这样做需要在一行代码中使用两个 NOT 运算符。无论运算数是什么类型，第一个NOT运算符返回 Boolean值，第二个NOT将对该Boolean值取反，从而给出变量真正的Boolean值。使用not运算符判断JavaScript变量的Boolean值是一个非常有用的技巧，只要知道了变量的boolean值，那么当使用变量进行&&或者||运算时，就可以很快知道运算的结果了。
+
+## (AND) &&
+
+逻辑AND运算的运算数可以是任何类型的，不止是Boolean值，如果某个运算数不是原始的Boolean型值，逻辑AND运算并不一定返回Boolean值
+逻辑AND运算符的运算行为如下：
+
+```
+如果一个运算数是对象，另一个是 Boolean 值，返回该对象。
+如果两个运算数都是对象，返回第二个对象。
+如果某个运算数是 null，返回 null。
+如果某个运算数是 NaN，返回 NaN。
+如果某个运算数是 undefined，发生错误。
+如果两个运算数都是boolean类型，则返回boolean值
+```
+
+## (OR) ||
+
+在JavaScript中，0，"",false,null,undefined,NaN均表示false
+
+JavaScript的逻辑 OR 运算也是简便运算，对于逻辑 OR 运算符来说，如果第一个运算数值为 true，就不再计算第二个运算数，如果某个运算数不是 Boolean 值，逻辑 OR 运算并不一定返回 Boolean 值.
+
+逻辑||的运算规则如下：
+
+```
+如果一个运算数是对象，另一个是 Boolean 值，返回该对象。
+如果两个运算数都是对象，返回第一个对象。
+如果某个运算数是 null，返回 null。
+如果某个运算数是 NaN，返回 NaN。
+如果某个运算数是 undefined，发生错误。
+```
+
+​	对于这些运算规则，没有必要死记硬背，因为在JavaScript中，可以使用逻辑Not运算符来判断JavaScript变量的Boolean值，判断的方式就是"!!变量名".
 
 # 流程语句
 
 # 数据类型
 
+​	基本数据类型是由固定数目的字节组成，这些字节可以在解析器的较底层进行操作，比如Number和 Boolean；而引用数据类型，可以包含任意数目的属性和元素，因此它们无法像基本数据类型那样很容易的操作。由于，引用数据类型的值是会发生变化的， 所以通过跟基本数据类型一样的值传递方式，也就没什么意义了，因为会牵涉到大量的内存的复制和比较，效率太低。所以引用数据类型是通过引用传递方式，实际传递的只是对象的一个地址。比如Array和Function，因为它们都是特殊的对象所以它们都是引用类型。另外，引用类型是可以添加属性，基本类型虽然也可以添加属性，也不会报错，经测试添加完之后却是无法访问的。
+
 ## JS中的数据类型
+
+前五种为基本数据类型: 
 
 1. 数值型（Number）：包括整数、浮点数。
 2. 布尔型（Boolean）
 3. 字符串型（String）
-4. 对象（Object）
-5. 数组（Array）
-6. 空值(Null)
-7. 未定义（Undefined）
+4. 空值(Null)
+5. 未定义（Undefined）
+6. 对象（Object）
+7. 数组（Array）
+
+
+
+## 对象类型
+
+Object
+
+Function
+
+```js
+var obj1 = new Object();
+var obj2 = obj1;
+obj2.name = "李白";
+console.log(obj1.name); // 李白
+```
+
+引用数据类型赋值过程图
+
+![引用数据类型赋值过程](image\引用数据类型赋值过程.png)
+
+
+
+
+
+# 方法
 
 
 
