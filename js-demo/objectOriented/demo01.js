@@ -40,4 +40,6 @@ console.log("p1.Name=" + p1.Name); //访问公有属性，这是可以正常访�
 console.log("p1.Age=" + p1.Age + "\t" + "p1.Salary=" + p1.Salary); //不能使用类的对象去直接访问类私有属性，这是访问不了的，结果都是undefined
 p1.Show(); //调用类的公共函数，这次允许的
 p1.Fn(); //调用类的公共函数，这次允许的
-//console.log("p1.privateFn()："+p1.privateFn()+"&nbsp;p1.privateFn2()："+p1.privateFn2());//不能使用类的对象去调用类的私有方法，这里会报错”对象不支持此属性或者方法“
+
+// p1.privateFn(); // 访问私有方法报错
+// p1.privateFn2(); // 访问私有方法报错

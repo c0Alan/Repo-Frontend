@@ -543,6 +543,742 @@ RegExp 对象方法
 
 # 面向对象
 
+## 封装
+
+## 继承
+
+## 多态
+
+```
+所谓多态，就是指一个引用在不同情况下的多种状态，在Java中多态是指通过指向父类的引用，来调用不同子类中实现的方法。
+JS实际上是无态的，是一种动态语言，一个变量的类型是在运行过程中由JS引擎决定的，所以说，JS天然支持多态。
+```
+
+## this
+
+1、this不能在类定义的外部使用，只能在类定义的内部使用。
+2、哪个对象调用this所在的函数，那么this代表的就是哪个对象实例。
+
+## 编写类的方式
+
+### 1、构造函数方式
+
+​	用构造函数模拟"类"，在其内部用this关键字指代实例对象。
+这种方式的优点是：可以根据参数来构造不同的对象实例 ，每个对象的属性一般是不相同的，缺点是构造每个实例对象时，方法不能共享，Person类里面定义的那些方法，p1对象有一份，p2也有一份，那么在内存中就得开辟两块内存空间来分别存储p1的方法和p2的方法，这样就造成了内存的浪费。对于一个类的不同实例对象，这些对象的属性一般是不相同的，但是方法是相同的，所以节约内存的做法就是把方法放到内存的一块区域中存放，然后每个实例对象都从这块内存中取出方法。
+
+### 2、原型方式
+
+​	需要说明的是，使用原型方式编写JavaScript类是无法给类添加私有属性和私有方法的，使用原型方式添加的属性和方法都是public的。
+原型方式的优点：所有对象实例都共享类中定义的方法，这样就没有造成内存浪费。缺点，第一，不能定义类的私有属性和私有方法，第二，给在创建对象，给对象的属性初始化时，需要额外写一个初始化对象的方法。
+
+### 3、构造函数+原型
+
+​	构造函数方式和原型方式都有各自的优缺点，因此可以把这两种方式合并起来，用构造函数方式来定义类的属性(public属性，private属性)，用原型方式来定义类的方法(public方法)。互补不足，这就有了第三种写法。
+第三种方式通过前两种方式的结合，算是达到了一个比较理想的写法了，可以通过传参构造对象实例，对象实例都共享同一份方法不造成内存浪费。第三种方式在开发中用得最多，我本人也是采用这种方式来编写JavaScript类。
+
+## 编写类的扩展方法
+
+在​J​a​v​a​S​c​r​i​p​t​中​可以使​用​类的p​r​o​t​o​t​y​p​e属性来​扩​展​类的属​性​和​方​法，在实际开发当中，
+当JavaScript内置的那些类所提供的动态方法和动态属性不满足我们实际开发时，
+我们就可以通过"prototype"属性给自定义类添加方法和属性或者扩展原有的类中的方法和属性。
+
+### 一、扩展JavaScript内置类，添加动态方法
+
+语法格式：
+类名.prototype.方法名 = function([param1],[param2],....[paramn]) {
+.................
+}
+[param1],[param2],....[paramn]这些参数都是可选的
+使用这种方式给类添加的扩展方法都是动态的，动态方法是针对类的实例对象的，
+所以调用必须要用"对象.方法名"的形式去调用，不能用"类名.方法名"的形式去调用！
+1.1、使用prototype属性扩展String类
+String类是JavaScript内置的一个类，但是这个String类没有quote方法，
+此时就可以使用String类的prototype属性去扩展String类了，为String类添加一个实例方法(动态方法)，
+这样每一个String类对象就都有quote方法了，这就达到了将String类扩展的效果，增强了String类的使用。
+/*扩展为String类，为String类增加quote（两边加字符）方法*/
+
+ ```js
+String.prototype.quote = function(quotestr) {
+    if (!quotestr) {
+        quotestr = """;
+    }
+    return quotestr + this + quotestr;
+};
+ ```
+
+测试String类新添加的quote方法
+
+alert("abc".quote());      
+alert("abc".quote("|"));
+测试结果：
+1.2、使用prototype扩展Number类
+Number.prototype.add=function(n){
+    //哪个对象调用this所在的函数，那么this代表的就是哪个对象实例
+    return this+n;
+}
+测试Number类新添加的add方法
+var i= new Number(10);//等价于var i=10;
+alert("i.Add(10).Add(30)的结果是："+i.Add(10).Add(30));
+var b=40;
+alert("b.Add(90)的结果是："+b.Add(90));
+测试结果：
+1.3、使用prototype扩展Array类
+
+```js
+Array.prototype.findVal=function(val){
+        var index=-1;
+        //哪个对象调用this所在的函数，那么this代表的就是哪个对象实例
+        for(var i=0;i<this.length;i++){
+            if(val==this[i]){
+                index=i;
+                break;
+            }
+        }
+        return index;
+    }
+测试Array类新添加的findVal方法
+var arr = new Array();
+arr[0]="aaa";
+arr[1]="bbb";
+arr[2]="ccc";
+alert("arr.FindVal("aaa")返回的索引是："+arr.FindVal("aaa"));
+```
+
+测试结果：
+以上三个小例子就是使用类的prototype属性扩展了String类，Number类，Array类，
+分别给这三个类添加了本身不存在的quote，add，findVal方法，JavaScript所有的类都可以使用prototype去扩展，
+当觉得类本身提供的方法和属性不满足实际应用需求时，就可以根据需要进行扩展，为类添加新的方法和属性，增强类的使用功能！
+
+### 二、扩展JavaScript内置类，添加静态方法
+
+JavaScript是可以给类添加静态的扩展方法的，语法格式如下：
+类名.方法名 = function([param1],[param2],....[paramn]) {
+.................
+}
+[param1],[param2],....[paramn]这些参数都是可选的
+使用这种方式给类添加的扩展方法都是静态的，动态方法是针对类的实例对象的，
+所以调用必须要用"对象.方法名"的形式去调用，而静态方法是针对类的，用"类名.方法名"的形式去调用！
+C#中的String类有一个静态的Format方法非常强大，在拼接字符串时特别方便，JavaScript的String类并没有Format方法，
+但是我们可以去扩展String类，为String类添加类似C#中的String类的静态的Format方法
+
+```js
+// 范例：扩展String类，添加Format静态方法，模仿C#中的String.Format方法
+// ----------------------------------------------------------------------
+// <summary>
+// 扩展String类，添加Format静态方法，模仿C#中的String.Format方法
+// </summary>
+// <returns>str</returns>
+// ----------------------------------------------------------------------
+if (!String.Format) {
+    String.Format = function () {
+        if (arguments.length == 0) {
+            return null;
+        }
+        var str = arguments[0];
+        if (arguments[1] instanceof Array) {
+            var arr = arguments[1];
+            for (var i = 0; i < arr.length; i++) {
+                var re = new RegExp('\{' + i + '\}', 'gm');
+                str = str.replace(re, arr[i]);
+            }
+        } else {
+            for (var i = 1; i < arguments.length; i++) {
+                var re = new RegExp('\{' + (i - 1) + '\}', 'gm');
+                str = str.replace(re, arguments[i]);
+            }
+        }
+        return str;
+    }
+}
+```
+
+测试为String类扩展的Format静态方法
+var str="我是{0}，我在总结{1}和{2}的学习，我很喜欢{3}这2门语言!";
+//使用"类名.方法名"的形式去调用类的静态方法
+str = String.Format(str,"孤傲苍狼","java","JavaScript","'java'和'JavaScript'");//把str中的占位符{0}，{1}，{2}，{3}用具体的内容替换掉
+alert(str);
+运行结果：
+这个小例子就是扩展了String类，给String类添加了一个静态的Format方法，
+JavaScript所有的类都可以添加静态扩展方法，当觉得类本身提供的静态方法和静态属性不满足实际应用需求时，
+就可以根据需要进行扩展，为类添加新的静态方法和静态属性，增强类的使用功能！
+以上就是对JavaScript编写类的扩展方法的总结，大家可以根据实际情况对JavaScript内置的那些类编写扩展方法，
+满足在开发中实际需求！有一个比较著名的prototype.js库就是针对JavaScript内置的那些类进行扩展，编写了大量的扩展方法！
+
+# Ojbect 对象
+
+Object类是所有JavaScript类的基类(父类)，提供了一种创建自定义对象的简单方式，不再需要程序员定义构造函数。
+
+Object对象，是所有JavaScript对象的超类(基类)。Object.prototype(Obecjt的原型)定义了Js对象的基本方法和属性。
+
+主要属性
+
+```
+1.constructor：对象的构造函数。
+2.prototype：获得类的prototype对象，static性质。
+```
+
+
+
+主要方法
+
+```
+1.hasOwnProperty(propertyName)
+判断对象是否有某个特定的属性。必须用字符串指定该属性，例如，obj.hasOwnProperty("name")，返回布尔值。此方法无法检查该对象的原型链中是否具有该属性；该属性必须是对象本身的一个成员。
+2.isPrototypeOf(object)
+判断该对象是否为另一个对象的原型。
+3.propertyIsEnumerable(propertyName)
+通过这个方法我们可以检测出这个对象成员是否是可遍历的，如果是可遍历出来的，证明这个对象就是可以利用for in 循环进行遍历的，
+4.toString()：返回对象对应的字符串
+5.valueOf()：返回对象对应的原始类型
+```
+
+
+
+## 构造函数
+
+2.1 new Object() ：返回一个Object实例
+2.2 new Object(value) ：根据value的值，返回不同的对象(Number、Boolean、String)
+参数：
+①value {number | bool | string} ：一个数字、布尔值或者字符串
+返回值：
+{Number、Boolean、String} 返回一个转换后的对象
+
+```js
+// 示例 ：
+var o = new Object(123);
+console.log(o); // => Number对象
+o = new Object(true);
+console.log(o); // => Boolean对象
+o = new Object('abc');
+console.log(o); // => String对象
+```
+
+## 实例属性
+
+3.1 __proto__ ：设置或返回对象的原型对象(IE中不支持此属性)
+说明：
+1) 赋值时，对象继承新原型的所有方法和属性，以及新原型的原型链中的所有方法和属性。
+2) 属性名称以两个下划线开始和结束。
+3) 对象的__proto__ == 对象类的prototype
+
+```js
+// 示例：
+// 1.自定义对象多层继承
+function People(name) {
+  this.name = name;
+}
+function Student(age) {
+    this.age = age;
+}
+Student.prototype = new People(); // 设置Student的原型为People对象
+var s = new Student(22);
+console.log(s.proto); // => People 对象
+console.log(Student.prototype); // => People 对象
+console.log(s.proto == Student.prototype); // => true
+// 2.对象直接量
+var p = {}; // 等于new Object()
+console.log(p.proto == Object.prototype); // => true
+```
+
+
+
+3.2 prototype ：设置或返回对象类的原型对象
+说明：
+1) prototype为对象类的属性。__proto__是对象的属性。
+2)  Js内置对象(Array、Date等对象)都有一个只读的prototype属性。 可将属性和方法添加到原型中，但不能为内置对象分配其他原型。
+3) 自定义对象的prototype属性可进行读写操作。
+
+```js
+// 示例：
+var Student = function (name) {
+    this.name = name;
+};
+// 给Student的原型添加一个sayHello方法
+Student.prototype.sayHello = function () {
+    alert('Hello,' + this.name);
+}
+var st = new Student('张三'); // 初始化对象st
+console.log(st.name); // => 张三
+st.sayHello(); // 弹出：Hello,张三
+```
+
+
+
+3.3 constructor ：表示创建此对象的构造函数
+说明：
+1) 设置或返回创建此对象的构造函数。
+2) 若一个对象有多层继承，将返回最先调用的构造函数。
+3) obj.constructor.prototype 可表示对象的原型。
+
+```js
+// 示例：
+// 1.内置对象
+var str = 'abc';
+console.log(str.constructor); // => function String 构造函数
+var o = {};
+console.log(o.constructor); // => function Object 构造函数
+// 2.自定义对象多层继承 ：constructor返回最先调用的构造函数
+function People(name) {
+    this.name = name; // s对象初始化时，先调用People构造函数，再调用Student构造函数
+    console.log('People调用');
+}
+function Student(age) {
+    this.age = age;
+    console.log('Student调用');
+}
+Student.prototype = new People(); // 设置Student的原型为People对象
+var s = new Student(22);
+console.log(s.constructor); // => function People 构造函数
+```
+
+
+
+总结：__proto__、prototype、constructor 的关系
+说明：
+1) 对象的__proto__ 等于 类的prototype
+2) 对象的constructor 等于 类，所以obj.constructor.prototype 可表示对象的原型。
+
+```js
+// 示例：
+var o = {};
+console.log(o.proto === Object.prototype); // true ：对象的proto等于类的prototype
+console.log(o.constructor === Object); // true ：对象的constructor 等于 类
+console.log(o.constructor.prototype === Object.prototype); // true ：o.constructor.prototype 可表示对象的原型。
+```
+
+　　
+
+## 实例方法
+
+4.1 hasOwnProperty(propertyName) ：判断对象是否拥有一个指定名称的实例属性(非继承)
+参数：
+①propertyName {string} ：属性名称。
+返回值：
+{bool} 判断对象是否拥有一个指定名称的本地定义(非继承)的属性；此方法不会检查对象原型链中的属性。
+true ：属性为对象的实例属性，非继承。
+false ：属性不为对象的实例属性。
+
+```js
+// 示例 ：
+// 1.Object对象
+var o = new Object();
+o.name = '自定义属性'; // 定义一个实例属性
+console.log(o.hasOwnProperty('name')); // => true：name属性为实例o自己定义的，而非继承
+console.log(o.hasOwnProperty('toString')); // => false：toString为继承属性
+// 2.自定义对象
+var Student = function (name) {
+    this.name = name;
+};
+// 给Student的原型添加一个sayHello方法
+Student.prototype.sayHello = function () {
+    alert('Hello,' + this.name);
+}
+// 给Student的原型添加一个age属性
+Student.prototype.age = '';
+var st = new Student('张三'); // 初始化对象st
+console.log(st.hasOwnProperty('name')); // => true ：调用构造函数时，通过this.name附加到实例对象上
+console.log(st.hasOwnProperty('sayHello')); // => false ：sayHello方法为原型上的成员
+console.log(st.hasOwnProperty('age')); // => false ：age属性为原型上的成员
+```
+
+
+
+4.2 isPrototypeOf(obejct) ：判断某个原型是否出现在对象的原型链中
+语法：
+prototype.isPrototypeOf(object)
+参数：
+①obejct {object} ：被检测的对象。
+返回值：
+{bool} 返回某个原型是否出现在对象的原型链中
+true ：是
+false ：不是
+
+```js
+// 示例 ：
+// 1.Obejct对象
+var o = new Object();
+console.log(Object.prototype.isPrototypeOf(o)); // => true ：o为Obejct一个对象
+// 2.Array
+var array = [1, 2, 3];
+console.log(Array.prototype.isPrototypeOf(array)); // => true ：数组原型
+console.log(Object.prototype.isPrototypeOf(array)); // => true ：Object是所有对象的基原型
+// 3.自定义对象
+var People = function () {
+}
+var Student = function () {
+}
+// 设置Student类的原型为People
+Student.prototype = new People();
+var st = new Student();
+console.log(Student.prototype.isPrototypeOf(st)); // => true ：st为Student一个对象
+console.log(People.prototype.isPrototypeOf(st)); // => true ：Student的原型为People
+console.log(Object.prototype.isPrototypeOf(st)); // =>true ：Object是所有对象的基原型
+```
+
+
+
+4.3 propertyIsEnumerable(propertyName) ：判断指定名称的属性是否为实例属性并且是可枚举的(可用for/in循环枚举)
+参数：
+①propertyName {string} ：属性名称
+返回值：
+{bool} 判断属性是否为实例属性并且是可枚举的(可用for/in循环枚举)，不考虑原型链中的成员。
+true ：是
+false ：不是
+
+```js
+// 示例 ：
+// 1.Array对象
+var array = [1, 2, 3];
+array.name = 'Array';
+console.log(array.propertyIsEnumerable('name')); // => true ：name属性为实例属性
+console.log(array.propertyIsEnumerable('join')); // => false ：join方法继承自Array
+console.log(array.propertyIsEnumerable('length')); // => false ：length属性继承自Array
+console.log(array.propertyIsEnumerable('toString')); // => false ：toString方法继承自Object
+// 2.自定义对象
+var Student = function (name) {
+    this.name = name;
+}
+// 定义一个原型方法
+Student.prototype.sayHello = function () {
+    alert('Hello' + this.name);
+};
+var a = new Student('tom');
+console.log(a.propertyIsEnumerable('name')); // => true ：name为自身定义的实例属性
+console.log(a.propertyIsEnumerable('age')); // => false ：age属性不存在，也返回false
+console.log(a.propertyIsEnumerable('sayHello')); // => false ：sayHello属于原型方法
+```
+
+
+
+4.4 toLocaleString() ：返回当前对象的一个本地化的字符串表示
+4.5 toString() ：返回当前对象的一个字符串表示形式
+4.6 valueOf() ：返回当前对象的原始值
+参数：无
+返回值：
+{object} 返回当前对象关联的原始值，若没有相关联的值，则返回对象本身
+
+```js
+// 示例 ：
+var a = [1, 2, 3];
+console.log(a.valueOf()); // => [1, 2, 3]
+var b = true;
+console.log(b.valueOf()); // => true
+var c = {};
+console.log(c.valueOf()); // => Object {}
+var s = 'abc';
+console.log(s.valueOf()); // => abc
+// 自定义个对象，重写valueOf
+var customObject = {};
+customObject.valueOf = function () {
+    return '自定义对象';
+}
+console.log(customObject.valueOf()); // => 自定义对象
+```
+
+
+
+## 静态方法
+
+5.1 Object.create(prototype, propertyDescriptor)：创建并返回一个指定原型和指定属性的对象
+参数：
+①prototype {prototype} ：返回对象的原型，可以为null。若为null，对象的原型为undefined。
+②propertyDescriptor {propertyDescriptor} 可选：属性描述符。
+属性描述符：设置属性的一系列特性；
+语法格式：
+propertyName: {
+  value: '', // 设置此属性的值
+  writable: true, // 设置此属性是否可写入；默认为false：只读
+  enumerable: true, // 设置此属性是否可枚举(通过for/in预付)；默认为false：不可枚举
+  configurable: true // 设置此属性是否可配置；如：是否可以修改属性的特性及删除属性。默认为false
+}
+返回值：
+{object} 返回一个指定原型和指定属性的对象
+
+```js
+// 示例 ：
+// 建立个自定义对象，设置name和age属性
+var obj = Object.create(null, {
+  name: {
+      value: 'tom',
+      writable: true,
+      enumerable: true,
+      configurable: true
+  },
+  age: {
+      value: 22
+  }
+});
+console.log(obj.name); // => tom
+console.log(obj.age); // => 22
+obj.age = 28;
+console.log(obj.age); // => 22 ：age属性的writable默认为false，此属性为只读
+for (p in obj) {
+    console.log(p); // => name ：只输出name属性；age属性的enumerable默认为false，不能通过for/in 枚举
+}
+```
+
+
+
+5.2  Object.defineProperties(object, propertyDescriptor) ：添加/修改对象一个或多个属性的特性
+参数：
+①object {object} ：对象
+②propertyDescriptor {propertyDescriptor} 属性描述符。
+说明：
+若对象包含此属性，则是修改此属性的特性；否则为为对象添加此属性。
+
+```js
+// 示例 ：
+var obj = {};
+// 为对象添加name和age属性
+Object.defineProperties(obj, {
+    name: {
+        value: 'tom',
+        enumerable: true
+    },
+    age: {
+        value: 22,
+        enumerable: true
+    }
+});
+for (p in obj) {
+    console.log(p); // => name、age ：输出name和age属性
+}
+```
+
+
+
+　　
+5.3 Object.defineProperty(obj, propertyName, propertyDescriptor) ：添加/修改对象指定属性的特性
+参数：
+①object {object} ：对象
+②propertyName {string} ：属性的名称
+③propertyDescriptor {propertyDescriptor} 属性描述符。
+说明 ：
+若对象包含此属性，则是修改此属性的特性；否则为添加此属性。
+
+```js
+// 示例：
+var obj = {};
+// 添加一个name属性
+Object.defineProperty(obj, 'name', {
+        value: 'tom',
+        writable: true,
+        enumerable: true,
+        configurable:true
+    }
+);
+console.log(obj.name); // => tom ：输出name属性的value的值
+```
+
+
+
+5.4 Object.freeze(object) ：冻结对象，使其不能添加属性以及无法对现有的实例属性进行特性更改、值修改、属性删除等操作
+参数：
+①object {object} ：对象
+说明 ：
+1) 此操作不可逆，冻结后无法进行解封。
+2) 只影响实例属性，不影响原型属性。
+
+```js
+// 示例：
+var obj = {
+    name: 'tom',
+    age: 22
+};
+Object.freeze(obj); // 冻结对象
+obj.email = '123@qq.com';
+console.log(obj.email); // undefined ：无法添加属性
+obj.age = 25;
+console.log(obj.age); // 22 ：无法设置属性的值
+```
+
+
+
+5.5 Object.getOwnPropertyDescriptor(object, propertyName) ：返回对象属性的描述符
+参数：
+①object {object} ：对象
+②propertyName {propertyName} 属性名称
+返回值：
+{propertyDescriptor} 属性描述符对象
+示例 ：
+var obj = {
+    name: 'tom',
+    age: 22
+};
+
+var propertyDes = Object.getOwnPropertyDescriptor(obj, 'name');
+console.log(propertyDes); // => Object {value: "tom", writable: true, enumerable: true, configurable: true} ：输出描述符对象
+　　
+5.6 Object.getOwnPropertyNames(object) ：返回一个数组，包含对象的所有实例属性和方法，不包含原型继承的属性和方法
+参数：
+①object {object} ：对象
+返回值：
+{Array} 一个数组，包含对象的所有实例属性和方法，不包含原型继承的属性和方法
+示例 ：
+var obj = {
+    name: 'tom',
+    age: 22,
+    sayHello: function () {
+        alert('Hello' + this.name);
+    }
+};
+console.log(Object.getOwnPropertyNames(obj)); // => ["name", "age", "sayHello"] ：返回对象的实例成员
+
+5.7 Object.getPrototypeOf(object) ：返回对象的上一级原型
+参数：
+①object {object} ：对象
+返回值：
+{object} 返回原型对象
+示例 ：
+// 1.对象直接量
+var obj = {
+    name: 'tom',
+    age: 22,
+    sayHello: function () {
+        alert('Hello' + this.name);
+    }
+};
+console.log(Object.getPrototypeOf(obj)); // => Object 对象：对象直接量的原型为Object
+
+// 2.自定义对象
+var People = function (name) {
+    this.name = name;
+};
+
+var p = new People('tom');
+var people = Object.getPrototypeOf(p);
+console.log(people); // => People 对象：new 创建的对象使用构造函数的prototype属性作为他们的原型
+console.log(Object.getPrototypeOf(people)); // => Object 对象：原型People的原型为Object
+　　
+5.8 Object.isExtensible(object) ：判断是否可向对象添加新的属性
+5.9 Object.isFrozen(object) ：判断对象是否冻结;true：不能修改对象的现有属性特性和值并且不能添加新的属性
+5.10 Object.isSealed(object) ：判断对象是否封闭;true：不能修改对象的现有属性特性并且不能添加新的属性
+
+5.11 Object.keys(object) ：返回一个数组，包含对象的可枚举的实例属性名称
+参数：
+①object {object} ：对象
+返回值：
+{Array} 返回一个数组，包含对象可枚举的实例属性名称
+说明：
+此方法与getOwnPropertyNames()类似，但getOwnPropertyNames()包含了可枚举和不可枚举的成员
+示例 ：
+var obj = {
+    name: 'tom',
+    age: 22,
+    sayHello: function () {
+        alert('Hello' + this.name);
+    }
+};
+
+// 1)getOwnPropertyNames与keys方法返回的内容都相同
+console.log(Object.getOwnPropertyNames(obj)); // => ["name", "age", "sayHello"] ：返回对象的所有实例成员
+console.log(Object.keys(obj)); // => ["name", "age", "sayHello"] ：返回对象的所有可枚举成员
+
+// 设置对象的name属性不可枚举
+Object.defineProperty(obj, 'name', {
+        enumerable: false
+    }
+);
+
+// 2)keys方法，只包含可枚举成员
+console.log(Object.getOwnPropertyNames(obj)); // => ["name", "age", "sayHello"] ：返回对象的所有实例成员
+console.log(Object.keys(obj)); // => ["age", "sayHello"] ：返回对象的所有可枚举成员
+
+5.12 Object.preventExtensions(object) ：设置对象不能添加新的属性
+参数：
+①object {object} ：对象
+返回值：
+{object} 返回此对象
+示例 ：
+var obj = {
+    name: 'tom',
+    age: 22
+};
+Object.preventExtensions(obj); // 设置对象不能添加新的属性
+obj.email = '123@qq.com';
+console.log(obj.email); // => undefined ：无法向对象添加新的属性
+
+5.13 Object.seal(object) ：密封对象，使其无法修改现有属性的特性以及不能添加新的属性
+参数：
+①object {object} ：对象
+返回值：
+{object} 返回此对象
+示例 ：
+var obj = {
+    name: 'tom',
+    age: 22
+};
+Object.seal(obj); // 密封对象
+obj.email = '123@qq.com';
+console.log(obj.email); // => undefined ：无法向对象添加新的属性
+
+// 报异常：无法修改对象属性的特性
+Object.defineProperty(obj, 'name', {
+        enumerable: false
+    }
+);
+
+## 属性描述符
+
+分为数据属性和访问器属性；
+两者可相互转换，若转换后未设置enumerable和configurable特性(两类属性描述符都包含这2个特性)，将默认采用转换前的值。
+6.1 数据属性
+说明：包含属性的操作特性；如：设置值、是否可枚举等等
+特性名称	描述	默认值
+value	设置属性的值	undefined
+writable	是否可修改属性的值；true：可修改属性的值；false：不可修改属性的值	false　　
+enumerable	是否可枚举属性；true：可枚举，可通过for/in语句枚举属性；false：不可枚举	false
+configurable	是否可修改属性的特性；true：可修改属性的特性(如把writable从false改为true)；false：不可修改属性的特性	false
+
+
+默认值：
+1)在使用Object.defineProperty、Object.defineProperties 或 Object.create 函数的情况下添加数据属性，writable、enumerable和configurable默认值为false。
+2)使用对象直接量创建的属性，writable、enumerable和configurable特性默认为true。
+示例：
+// 1)对象直接量；属性特性默认为true
+var o1 = {
+    name: 'tom'
+};
+console.log(Object.getOwnPropertyDescriptor(o1, 'name')); // => Object {value: "tom", writable: true, enumerable: true, configurable: true}
+
+// 2)通过Object.create创建，属性特性默认为false
+var o2 = Object.create(null, {
+    name: {value:'tom'}
+});
+console.log(Object.getOwnPropertyDescriptor(o2, 'name')); // => Object {value: "tom", writable: false, enumerable: false, configurable: false}
+
+6.2 访问器属性
+说明：设置属性的访问方式；set、get特性等
+特性名称	描述	默认值
+get	属性的返回值函数	undefined
+set	属性的设置值函数；含有一个赋值参数	undefined
+enumerable	是否可枚举属性；true：可枚举，可通过for/in语句枚举属性；false：不可枚举	false
+configurable	是否可修改属性的特性；true：可修改属性的特性(如把writable从false改为true)；false：不可修改属性的特性	false
+
+
+示例：
+var obj = {};
+
+// 添加一个属性，并设置为访问器属性
+Object.defineProperty(obj, "name", {
+    get: function () {
+        return this._name; // get和set里的变量不要使用属性，如：属性为name，get和set用的是_name
+    },
+    set: function (x) {
+        if (isNaN(x)) {
+            this._name = x;
+        } else {
+            this._name = 'name不能为纯数字';
+        }
+    },
+    enumerable: true,
+    configurable: true
+});
+
+console.log(Object.getOwnPropertyDescriptor(obj, 'name')); // => Object {get: function, set: function, enumerable: true, configurable: true}
+obj.name = '12';
+console.log(obj.name); // => name不能为纯数字
+
 # 处理事件
 ## 处理窗口事件
 onload事件
