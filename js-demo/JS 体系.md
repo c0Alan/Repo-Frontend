@@ -595,32 +595,38 @@ JS实际上是无态的，是一种动态语言，一个变量的类型是在运
 String类是JavaScript内置的一个类，但是这个String类没有quote方法，
 此时就可以使用String类的prototype属性去扩展String类了，为String类添加一个实例方法(动态方法)，
 这样每一个String类对象就都有quote方法了，这就达到了将String类扩展的效果，增强了String类的使用。
-/*扩展为String类，为String类增加quote（两边加字符）方法*/
+
 
  ```js
+/* 扩展为String类，为String类增加quote（两边加字符）方法 */
 String.prototype.quote = function(quotestr) {
     if (!quotestr) {
         quotestr = """;
     }
-    return quotestr + this + quotestr;
+    return quotestr + this + quotestr;   
 };
- ```
 
-测试String类新添加的quote方法
-
+// 测试String类新添加的quote方法
 alert("abc".quote());      
 alert("abc".quote("|"));
+ ```
+
+
 测试结果：
 1.2、使用prototype扩展Number类
+
+```js
 Number.prototype.add=function(n){
-    //哪个对象调用this所在的函数，那么this代表的就是哪个对象实例
+    // 哪个对象调用this所在的函数，那么this代表的就是哪个对象实例
     return this+n;
 }
-测试Number类新添加的add方法
-var i= new Number(10);//等价于var i=10;
+// 测试Number类新添加的add方法
+var i= new Number(10); // 等价于var i=10;
 alert("i.Add(10).Add(30)的结果是："+i.Add(10).Add(30));
 var b=40;
 alert("b.Add(90)的结果是："+b.Add(90));
+```
+
 测试结果：
 1.3、使用prototype扩展Array类
 
@@ -690,13 +696,16 @@ if (!String.Format) {
         return str;
     }
 }
-```
 
-测试为String类扩展的Format静态方法
+// 测试为String类扩展的Format静态方法
 var str="我是{0}，我在总结{1}和{2}的学习，我很喜欢{3}这2门语言!";
 //使用"类名.方法名"的形式去调用类的静态方法
-str = String.Format(str,"孤傲苍狼","java","JavaScript","'java'和'JavaScript'");//把str中的占位符{0}，{1}，{2}，{3}用具体的内容替换掉
+//把str中的占位符{0}，{1}，{2}，{3}用具体的内容替换掉
+str = String.Format(str,"孤傲苍狼","java","JavaScript","'java'和'JavaScript'");
 alert(str);
+```
+
+
 运行结果：
 这个小例子就是扩展了String类，给String类添加了一个静态的Format方法，
 JavaScript所有的类都可以添加静态扩展方法，当觉得类本身提供的静态方法和静态属性不满足实际应用需求时，
@@ -1047,7 +1056,7 @@ for (p in obj) {
 
 
 
-　　
+
 5.3 Object.defineProperty(obj, propertyName, propertyDescriptor) ：添加/修改对象指定属性的特性
 参数：
 ①object {object} ：对象
