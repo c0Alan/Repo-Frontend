@@ -1288,7 +1288,91 @@ console.log(Object.getOwnPropertyDescriptor(obj, 'name')); // => Object {get: fu
 obj.name = '12';
 console.log(obj.name); // => name不能为纯数字
 
+# 闭包
+
+## 一、变量的作用域
+
+​	全局变量和局部变量。
+
+## 二、闭包
+
+​	解决从外部读取局部变量的问题.
+
+​	闭包就是在另一个作用域中保存了一份它从上一级函数或者作用域得到的变量，而这些变量是不会随上一级函数的执行完成而销毁.
+
+实例:
+
+```js
+function f1() {
+    var n = 999;
+    // nAdd是一个没有使用var声明的全局变量，这个变量现在指向了在f1函数内部声明的一个匿名函数
+    nAdd = function () {
+        n += 1
+    }
+
+    function f2() {
+        console.log(n);
+        // n = n + 1; // 这里对n做操作也是有效的
+    }
+    return f2;
+}
+var result = f1(); // result就是f2函数
+result(); // 第一次调用result函数 999
+nAdd(); // nAdd代表的就是在f1函数内部声明的一个匿名函数，nAdd()就是在调用匿名函数
+result(); // 第二次调用result函数 1000
+```
+
+
+
+## 三、闭包的用途
+
+最大用处有两个，一个是前面提到的可以读取函数内部的变量，另一个就是让这些变量的值始终保持在内存中。
+
+## 四、使用闭包的注意点
+
+1）由于闭包会使得函数中的变量都被保存在内存中，内存消耗很大，所以不能滥用闭包，否则会造成网页的性能问题，在IE中可能导致内存泄露。解决方法是，在退出函数之前，将不使用的局部变量全部删除。
+
+2）闭包会在父函数外部，改变父函数内部变量的值。所以，如果你把父函数当作对象（object）使用，把闭包当作它的公用方法（Public Method），把内部变量当作它的私有属性（private value），这时一定要小心，不要随便改变父函数内部变量的值。
+
+# 原型链
+
+## 一、概念
+
+　　ECMAScript中描述了原型链的概念，并将原型链作为实现继承的主要方法。其基本思想是利用原型让一个引用类型继承另一个引用类型的属性和方法。在JavaScript中，用 `__proto__ `属性来表示一个对象的原型链。当查找一个对象的属性时，JavaScript 会向上遍历原型链，直到找到给定名称的属性为止！
+
+​	在JavaScript中，Object类是所有类的父类，所以Person类从Object类继承，继承了Object类的所有public属性和public方法.
+
+```js
+ /*定义一个Person类*/
+ function Person(_name,_age){
+     this.name = _name;
+     this.age = _age;
+ }
+// Person类通过使用原型(prototye)的方式继承Object类的：
+Person.prototype = new Object();// 让Person类继承Object类
+```
+
+　　由于JavaScript规定，任何类都继承自Object类，所以"Person.prototype = new Object(); "即使我们不写，JavaScript引擎也会自动帮我们加上这句话，或者是使用"Person.prototype = Object.prototype;"这种方式，让Person类去继承Object类。"Person.prototype = new Object();"，其实这样就相当于Object对象是Person的一个原型，这样就相当于了把Object对象的属性和方法复制到了Person上了。
+
+## 二、new 运算符
+
+```js
+var p  = new Person("Tom",24); // 创建一个人，名字是Tom
+console.log((p.__proto__ === Person.prototype)); // true
+// 很简单的一段代码，我们来看看这个new究竟做了什么？我们可以把new的过程拆分成以下三步：
+1.var p={}; 初始化一个对象p。
+2.p.__proto__=Person.prototype; // 将对象p的 __proto__ 属性设置为 Person.prototype
+3.Person.call(p,"Tom",24); // 调用构造函数Person来初始化p。
+```
+
+​	每个对象都会在其内部初始化一个属性，就是 `__proto__`，当我们访问一个对象的属性时，如果这个对象内部不存在这个属性，那么他就会去`__proto__`里找这个属性，这个 `__proto__`又会有自己的`__proto__`，于是就这样一直找下去，也就是我们平时所说的原型链的概念。
+
+​	按照标准，`__proto__`是不对外公开的，也就是说是个私有属性，在IE下是无法访问`__proto__`属性的，但是Firefox的引擎将他暴露了出来成为了一个公有的属性，我们可以对外访问和设置。
+
+​	其实prototype只是一个假象，他在实现原型链中只是起到了一个辅助作用，换句话说，他只是在new的时候有着一定的价值，而原型链的本质，其实在于`__proto__`。
+
 # 处理事件
+
 ## 处理窗口事件
 onload事件
 onunload事件
