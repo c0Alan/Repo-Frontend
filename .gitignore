@@ -1,0 +1,10 @@
+.idea
+*.iml
+*.gitignore
+*.class
+target
+application-local.properties
+*.log
+*.out
+*.hprof
+mvntree.txt
