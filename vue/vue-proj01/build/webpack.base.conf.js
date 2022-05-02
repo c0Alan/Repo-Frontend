@@ -3,8 +3,9 @@ const path = require('path')
 const utils = require('./utils')
 const config = require('../config')
 const vueLoaderConfig = require('./vue-loader.conf')
+const FileManagerPlugin = require('filemanager-webpack-plugin'); // 压缩文件夹
 
-function resolve (dir) {
+function resolve(dir) {
   return path.join(__dirname, '..', dir)
 }
 
@@ -88,5 +89,17 @@ module.exports = {
     net: 'empty',
     tls: 'empty',
     child_process: 'empty'
-  }
+  },
+  plugins: [
+    new FileManagerPlugin({
+      onEnd: {
+        delete: [
+          './dist.zip',
+        ],
+        archive: [
+          {source: './dist', destination: './dist.zip'},
+        ]
+      }
+    })
+  ]
 }

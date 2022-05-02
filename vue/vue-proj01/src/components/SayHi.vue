@@ -8,7 +8,7 @@
 export default {
   data () {
     return {
-      message: '你好Vue! 本消息来自于变量，测试远程自动化构建部署'
+      message: '你好Vue! 本消息来自于变量，测试远程自动化构建部署!'
     }
   }
 }
