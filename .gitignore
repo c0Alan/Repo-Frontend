@@ -13,3 +13,4 @@ mvntree.txt
 *.zip
 /vue/vue-proj01/package-lock.json
 dist
+node_modules

@@ -1,0 +1,13 @@
+{
+  "name": "nodeJs-ext",
+  "description": "nodeJs 扩展",
+  "version": "1.0",
+  "private": true,
+  "dependencies": {
+    "async": "^3.2.3",
+    "child_process": "^1.0.2",
+    "express": "4.18.1",
+    "htmlparser": "^1.7.7",
+    "request": "^2.88.2"
+  }
+}
