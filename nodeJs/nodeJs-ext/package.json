@@ -7,10 +7,17 @@
     "async": "^3.2.3",
     "child_process": "^1.0.2",
     "connect": "^3.7.0",
+    "ejs": "^3.1.8",
     "express": "4.18.1",
+    "github-flavored-markdown": "^1.0.1",
     "hapi": "^18.1.0",
+    "hogan.js": "^3.0.2",
     "htmlparser": "^1.7.7",
+    "knex": "^2.1.0",
     "koa": "^2.13.4",
-    "request": "^2.88.2"
+    "pug": "^3.0.2",
+    "redis": "^4.1.0",
+    "request": "^2.88.2",
+    "sqlite3": "^5.0.8"
   }
 }

@@ -7,8 +7,7 @@ module.exports = (cb, perpage) => {
       parseInt(req.params.page || '1', 10),
       1
     ) - 1;
-    cb((err, total) => {
-      if (err) return next(err);
+    cb((total) => {
       req.page = res.locals.page = {
         number: page,
         perpage: perpage,
